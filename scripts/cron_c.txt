@@ -1,0 +1,6 @@
+0 4 * * * /bin/bash /home/vm-admin/superset/scripts/backup.sh
+0 4 * * * find /home/vm-admin/backups/ -name "*.tar.gz" -type f -mtime +7 -delete
+0 4 * * * rclone sync /home/vm-admin/backups/ gdrive_pptim:/superset_backup
+0 5 * * * python3 /home/vm-admin/superset/scripts/load_1c_tables.py
+0 5 * * * echo "SELECT create_cross_all();" | docker exec -i superset_db psql -U superset -d superset
+0 5 * * * echo "SELECT create_all_updated();" | docker exec -i superset_db psql -U superset -d superset
