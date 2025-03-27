@@ -1,3 +1,5 @@
 venv/
 available_permissions.txt
 py_requirements.txt
+.env-non-dev
+docker/.env-non-dev
