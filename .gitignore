@@ -3,3 +3,6 @@ available_permissions.txt
 py_requirements.txt
 .env-non-dev
 docker/.env-non-dev
+airflow-env/
+airflow/airflow.cfg
+docker/pythonpath_dev/client_secret.json
