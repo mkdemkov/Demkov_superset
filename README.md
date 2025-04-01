@@ -8,30 +8,6 @@ docker-compose -f docker-compose-non-dev.yml up -d
 Расположение скрипта: superset/scripts/backup.sh
 <br>
 Скрипт выгружает и сжимает дамп постгре базы, хранящей данные о пользователях, дешбордах, источниках данных. Перед запуском необходимо указать параметры GROUP_ID и BOT_TOKEN.
-<br>
-Уведомления о результатах выполнения бекапа приходят в тг канал: https://t.me/+PsoooBE5TCo0MDhi
-<br>
-Автозапуск скрипта происходит с помощью команды :
-<br>
-crontab superset/backup/cron_c.txt
-<br>
-Она перезаписывает таблицу кронтаба, добавляя два процесса - регулярный бэкап и удаление бэкапов старше недели.
-
-
-## Sentry
-Официальная документация:
-<br>
-https://docs.sentry.io/platforms/python/guides/flask/
-<br>
-Для работы изменены следующие файлы:
-<br>
-/superset/docker/requirements-local.txt - файл с названиями python библиотек, загружаемых при каждом запуске компоуза.
-<br>
-Для sentry дополнительно импортируются библиотеки sentry-sdk и blinker.
-<br>
-/superset/docker/pythonpath_dev/superset_config.py - конфигурационный файл суперсета.
-<br>
-Для sentry добавлен код инициализации подключения из официальной документации.
 
 
 ## Keycloak
