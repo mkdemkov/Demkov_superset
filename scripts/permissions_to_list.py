@@ -31,13 +31,5 @@ try:
         for permission, view_menu in rows:
             f.write(f"{permission} on {view_menu}\n")
 
-    print("Permissions written to available_permissions.txt")
-
 except Exception as e:
-    print(f"An error occurred: {e}")
-
-finally:
-    if 'cursor' in locals():
-        cursor.close()
-    if 'conn' in locals():
-        conn.close()
+    print(f"e")

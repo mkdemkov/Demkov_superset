@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+import pandas as pd
 
 def process_excel(**kwargs):
-    import pandas as pd
     
     excel_path = 'data/attenders.xlsx' # файлы поступают в сетевую папку - как поступить на проде ?
 

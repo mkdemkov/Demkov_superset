@@ -9,6 +9,8 @@ from flask_appbuilder.views import ModelView, SimpleFormView, expose
 import logging
 import urllib.parse
 
+# https://superset.apache.org/docs/configuration/configuring-superset/ - Документация (пример отсюда)
+
 class OIDCSecurityManager(SupersetSecurityManager):
 
     def __init__(self, appbuilder):
@@ -41,7 +43,7 @@ class AuthOIDCView(AuthOIDView):
                 user.roles.append(sm.find_role('Staff'))
                 sm.update_user(user)
             login_user(user, remember=False)
-            return redirect('/superset/dashboard/45/')
+            return redirect('/superset/welcome/')
 
         return handle_login()
 
@@ -51,7 +53,8 @@ class AuthOIDCView(AuthOIDView):
 
         oidc.logout()
         super(AuthOIDCView, self).logout()
-        redirect_url = urllib.parse.quote_plus(request.url_root.strip('/') + self.appbuilder.get_url_for_login)
+
+        # return redirect('http://localhost:8088')
 
         return redirect(
-            oidc.client_secrets.get('issuer') + '/protocol/openid-connect/logout?client_id='+ oidc.client_secrets.get('client_id')+'&post_logout_redirect_uri=' + 'https://bi.miem2.vmnet.top/')
+            oidc.client_secrets.get('issuer') + '/protocol/openid-connect/logout?client_id='+ oidc.client_secrets.get('client_id')+'&post_logout_redirect_uri=' + 'http://localhost:8088')

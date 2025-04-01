@@ -51,7 +51,7 @@ LANGUAGES = {
 
 # Keycloak
 from keycloak_security_manager import  OIDCSecurityManager
-from flask_appbuilder.security.manager import AUTH_OID, AUTH_REMOTE_USER, AUTH_DB, AUTH_LDAP, AUTH_OAUTH
+from flask_appbuilder.security.manager import AUTH_OID
 import os
 curr  =  os.path.abspath(os.getcwd())
 AUTH_TYPE = AUTH_OID
@@ -221,7 +221,16 @@ FEATURE_FLAGS = {
     "ALERT_REPORTS": True,
     "EMBEDDED_SUPERSET": True,
     "DASHBOARD_RBAC": True,
+    "HORIZONTAL_FILTER_BAR": True,
+    "DRILL_TO_DETAIL": True,
+    "DASHBOARD_CROSS_FILTERS": True
 }
+
+# FEATURE_FLAGS = {
+#     "ALERT_REPORTS": True,
+#     "EMBEDDED_SUPERSET": True,
+#     "DASHBOARD_RBAC": True
+# }
 GUEST_ROLE_NAME = "public_guest"
 
 HTTP_HEADERS = {'X-Frame-Options': 'ALLOWALL',
