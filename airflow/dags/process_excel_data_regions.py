@@ -2,35 +2,68 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 import pandas as pd
+import requests
+import time
 
-def process_excel(**kwargs):
+# def process_excel(**kwargs):
+#     excel_path = 'data/attenders.xlsx'  # на проде в реальном проекте можно считывать путь из переменных окружения или Airflow Variables
     
-    excel_path = 'data/attenders.xlsx' # файлы поступают в сетевую папку - как поступить на проде ?
+#     df = pd.read_excel(excel_path)
+    
+#     def call_api(region_value):
+#         if not region_value or len(region_value) < 2:
+#             return None
+#         # Здесь укажите ваш реальный IP и порт, где крутится Flask
+#         url = "http://192.168.1.135:5000/get_region"
+#         try:
+#             response = requests.get(url, params={"region": region_value})
+#             print(f"Original value - {region_value}, normalized value - {response.text}")
+#             time.sleep(3)
+#             return response.text
+#         except Exception as e:
+#             print(f"Ошибка при запросе к API для региона {region_value}: {str(e)}")
+#             return None
+    
+#     # Для каждого региона в «Регион проживания» отправляем запрос на API и записываем ответ в столбец `region`
+#     df['region'] = df['Регион проживания'].apply(call_api)
+    
+#     # Сохраняем результат в новый Excel (или можно перезаписать исходный)
+#     output_path = 'data/attenders_processed.xlsx'
+#     df.to_excel(output_path, index=False)
+#     print(f"Data processed and saved to {output_path}")
 
+regions_normalized = {
+
+}
+
+def process_excel():
+    excel_path = 'data/attenders.xlsx'  # на проде в реальном проекте можно считывать путь из переменных окружения или Airflow Variables
+    
     df = pd.read_excel(excel_path)
     
-    # Main function to normalize region
-    def normalize_region(region):
-        region = str(region).lower()
-        if 'московск' in region:
-            return 'Московская область'
-        elif 'москва' in region and 'обл' not in region:
-            return 'Москва'
-        elif 'перм' in region:
-            return 'Пермский край'
-        # Other normalization rules
-        else:
+    def call_api(region_value):
+        if pd.isna(region_value) or not region_value or len(region_value) < 2:
+            return None
+        if region_value in regions_normalized:
+            return regions_normalized[region_value]
+        # Здесь укажите ваш реальный IP и порт, где крутится Flask
+        url = "http://192.168.1.135:5000/get_region"
+        try:
+            response = requests.get(url, params={"region": region_value})
+            print(f"Original value - {region_value}, normalized value - {response.text}")
+            time.sleep(3)
+            regions_normalized[region_value] = response.text
+            return response.text
+        except Exception as e:
+            print(f"Ошибка при запросе к API для региона {region_value}: {str(e)}")
             return None
     
-    # Normalize regions
-    df['region_cleaned'] = df['Регион проживания'].apply(normalize_region)
+    # Для каждого региона в «Регион проживания» отправляем запрос на API и записываем ответ в столбец `region`
+    df['region'] = df['Регион проживания'].apply(call_api)
     
-    # Foreigners (??)
-    df = df[df['region_cleaned'].notnull()]
-    
-    # Save for the new csv (probably update xlsx or create new one)
-    output_path = '/path/to/processed_data.csv'
-    df.to_csv(output_path, index=False)
+    # Сохраняем результат в новый Excel (или можно перезаписать исходный)
+    output_path = 'data/attenders_processed.xlsx'
+    df.to_excel(output_path, index=False)
     print(f"Data processed and saved to {output_path}")
 
 default_args = {
@@ -54,3 +87,6 @@ process_task = PythonOperator(
     provide_context=True,
     dag=dag,
 )
+
+if __name__ == '__main__':
+    process_excel()
