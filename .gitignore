@@ -6,3 +6,5 @@ docker/.env-non-dev
 airflow-env/
 airflow/airflow.cfg
 docker/pythonpath_dev/client_secret.json
+data/
+api/.env
