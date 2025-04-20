@@ -6,7 +6,7 @@ import requests
 import time
 
 # def process_excel(**kwargs):
-#     excel_path = 'data/attenders.xlsx'  # на проде в реальном проекте можно считывать путь из переменных окружения или Airflow Variables
+#     excel_path = 'data/attenders.xlsx' # change to actual path
     
 #     df = pd.read_excel(excel_path)
     
@@ -23,11 +23,10 @@ import time
 #         except Exception as e:
 #             print(f"Ошибка при запросе к API для региона {region_value}: {str(e)}")
 #             return None
-    
-#     # Для каждого региона в «Регион проживания» отправляем запрос на API и записываем ответ в столбец `region`
+
+# подразумевается что препроцессинг готов
 #     df['region'] = df['Регион проживания'].apply(call_api)
     
-#     # Сохраняем результат в новый Excel (или можно перезаписать исходный)
 #     output_path = 'data/attenders_processed.xlsx'
 #     df.to_excel(output_path, index=False)
 #     print(f"Data processed and saved to {output_path}")
@@ -37,7 +36,7 @@ regions_normalized = {
 }
 
 def process_excel():
-    excel_path = 'data/attenders.xlsx'  # на проде в реальном проекте можно считывать путь из переменных окружения или Airflow Variables
+    excel_path = 'data/attenders.xlsx' 
     
     df = pd.read_excel(excel_path)
     
@@ -46,7 +45,6 @@ def process_excel():
             return None
         if region_value in regions_normalized:
             return regions_normalized[region_value]
-        # Здесь укажите ваш реальный IP и порт, где крутится Flask
         url = "http://192.168.1.135:5000/get_region"
         try:
             response = requests.get(url, params={"region": region_value})
@@ -58,10 +56,9 @@ def process_excel():
             print(f"Ошибка при запросе к API для региона {region_value}: {str(e)}")
             return None
     
-    # Для каждого региона в «Регион проживания» отправляем запрос на API и записываем ответ в столбец `region`
+
     df['region'] = df['Регион проживания'].apply(call_api)
     
-    # Сохраняем результат в новый Excel (или можно перезаписать исходный)
     output_path = 'data/attenders_processed.xlsx'
     df.to_excel(output_path, index=False)
     print(f"Data processed and saved to {output_path}")
