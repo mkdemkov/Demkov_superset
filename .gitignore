@@ -7,8 +7,3 @@ airflow-env/
 airflow/airflow.cfg
 docker/pythonpath_dev/client_secret.json
 api/.env
-data/attenders_processed.xlsx
-data/attenders_with_iso.xlsx
-data/attenders.xlsx
-data/finance_2024.xlsx
-data/finance_2024_processed.xlsx

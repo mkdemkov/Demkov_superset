@@ -59,4 +59,3 @@ if deficit:
 
 
 df_merged.to_excel(output_file, index=False)
-print(f"Done! Enriched finance saved to '{output_file}'")
