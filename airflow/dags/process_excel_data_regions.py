@@ -5,38 +5,12 @@ import pandas as pd
 import requests
 import time
 
-# def process_excel(**kwargs):
-#     excel_path = 'data/attenders.xlsx' # change to actual path
-    
-#     df = pd.read_excel(excel_path)
-    
-#     def call_api(region_value):
-#         if not region_value or len(region_value) < 2:
-#             return None
-#         # Здесь укажите ваш реальный IP и порт, где крутится Flask
-#         url = "http://192.168.1.135:5000/get_region"
-#         try:
-#             response = requests.get(url, params={"region": region_value})
-#             print(f"Original value - {region_value}, normalized value - {response.text}")
-#             time.sleep(3)
-#             return response.text
-#         except Exception as e:
-#             print(f"Ошибка при запросе к API для региона {region_value}: {str(e)}")
-#             return None
-
-# подразумевается что препроцессинг готов
-#     df['region'] = df['Регион проживания'].apply(call_api)
-    
-#     output_path = 'data/attenders_processed.xlsx'
-#     df.to_excel(output_path, index=False)
-#     print(f"Data processed and saved to {output_path}")
-
 regions_normalized = {
 
 }
 
-def process_excel():
-    excel_path = 'data/attenders.xlsx' 
+def process_excel(**kwargs):
+    excel_path = 'data/attenders.xlsx' # change to actual path
     
     df = pd.read_excel(excel_path)
     
@@ -55,13 +29,65 @@ def process_excel():
         except Exception as e:
             print(f"Ошибка при запросе к API для региона {region_value}: {str(e)}")
             return None
-    
-
+        
     df['region'] = df['Регион проживания'].apply(call_api)
     
     output_path = 'data/attenders_processed.xlsx'
     df.to_excel(output_path, index=False)
     print(f"Data processed and saved to {output_path}")
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2025, 3, 28),
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+dag = DAG(
+    'process_excel_data',
+    default_args=default_args,
+    description='Загрузка и обработка еженедельного Excel-файла с данными по регионам слушателей',
+    schedule_interval=timedelta(days=7),
+)
+
+process_task = PythonOperator(
+    task_id='process_excel',
+    python_callable=process_excel,
+    provide_context=True,
+    dag=dag,
+)
+
+if __name__ == '__main__':
+    process_excel()
+
+# def process_excel():
+#     excel_path = 'data/attenders.xlsx' 
+    
+#     df = pd.read_excel(excel_path)
+    
+#     def call_api(region_value):
+#         if pd.isna(region_value) or not region_value or len(region_value) < 2:
+#             return None
+#         if region_value in regions_normalized:
+#             return regions_normalized[region_value]
+#         url = "http://192.168.1.135:5000/get_region"
+#         try:
+#             response = requests.get(url, params={"region": region_value})
+#             print(f"Original value - {region_value}, normalized value - {response.text}")
+#             time.sleep(3)
+#             regions_normalized[region_value] = response.text
+#             return response.text
+#         except Exception as e:
+#             print(f"Ошибка при запросе к API для региона {region_value}: {str(e)}")
+#             return None
+    
+
+    # df['region'] = df['Регион проживания'].apply(call_api)
+    
+    # output_path = 'data/attenders_processed.xlsx'
+    # df.to_excel(output_path, index=False)
+    # print(f"Data processed and saved to {output_path}")
 
 default_args = {
     'owner': 'airflow',

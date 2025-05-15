@@ -46,9 +46,3 @@ https://superset.apache.org/docs/contributing/translations/
 /superset/superset/translations/ru/LC_MESSAGES/messages.mo - словарь, сконвертированный в бинарный вид.
 <br>
 /superset/superset/translations/ru/LC_MESSAGES/messages.json - словарь, сконвертированный в json для доступа с фронтенда.
-
-Процедура обновления перевода:
-1. Изменить значения в messages.mo
-2. Выполнить ./scripts/po2json.sh для генерации messages.json
-3. Выполнить pybabel compile -d superset/translations для генерации messages.mo
-4. Пересобрать образ docker build -f superset/Dockerfile --force-rm -t {имя_образа} superset/

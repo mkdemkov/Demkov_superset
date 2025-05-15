@@ -64,7 +64,7 @@ CUSTOM_SECURITY_MANAGER = OIDCSecurityManager
 AUTH_USER_REGISTRATION = True
 AUTH_USER_REGISTRATION_ROLE = 'Gamma'
 OIDC_VALID_ISSUERS = ['https://profile.miem.hse.ru/auth/realms/MIEM']
-
+    
 # Sentry
 # import sentry_sdk
 # from sentry_sdk.integrations.flask import FlaskIntegration
